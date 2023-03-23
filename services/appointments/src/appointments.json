@@ -1,0 +1,32 @@
+[
+  {
+    "id":"7f3f28fa-70e3-4568-ad60-56dcff63e151",
+    "appointmentDate":"1-1-23",
+    "patient": {
+      "id": "eea52e1c-2fc3-406c-aacf-c9b3a57eac22"
+    },
+    "provider": {
+     "id": "90f0b355-64ae-42e7-91a8-cb93e33c11e0"
+    }
+  },
+  {
+    "id":"95be2e77-0cac-4bf2-a45c-f0eb6753f651",
+    "appointmentDate":"1-1-23",
+    "patient": {
+      "id": "58924b81-ffbd-430c-b219-eebb9d69074b"
+    },
+    "provider": {
+     "id": "90f0b355-64ae-42e7-91a8-cb93e33c11e0"
+    }
+  },
+  {
+    "id":"9e56ec84-c986-11ed-afa1-0242ac120002",
+    "appointmentDate":"1-1-23",
+    "patient": {
+      "id": "58924b81-ffbd-430c-b219-eebb9d69074b"
+    },
+    "provider": {
+     "id": "4f4b37e9-c3d1-44c1-827f-4768fd987c5c"
+    }
+  }
+]

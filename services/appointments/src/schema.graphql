@@ -1,0 +1,32 @@
+scalar _FieldSet
+
+# a union of all types that use the @key directive
+directive @external on FIELD_DEFINITION
+directive @requires(fields: _FieldSet!) on FIELD_DEFINITION
+directive @provides(fields: _FieldSet!) on FIELD_DEFINITION
+directive @key(fields: _FieldSet!) on OBJECT | INTERFACE
+directive @extends on OBJECT
+directive @connection(key: String, filter: [String]) on FIELD
+
+type _Service {
+  sdl: String
+}
+
+type Query {
+  _service: _Service!
+  appointment(id: ID!): Appointment
+  appointments: [Appointment]
+}
+
+type Appointment @key(fields: "id") {
+    id: ID!
+    appointmentDate: String!
+    patient: User!
+    provider: User!
+}
+
+type User @extends @key(fields: "id") {
+  id: ID!
+  name: String! @external
+  practice: String @external
+}

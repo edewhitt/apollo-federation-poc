@@ -1,0 +1,24 @@
+scalar _FieldSet
+
+# a union of all types that use the @key directive
+directive @external on FIELD_DEFINITION
+directive @requires(fields: _FieldSet!) on FIELD_DEFINITION
+directive @provides(fields: _FieldSet!) on FIELD_DEFINITION
+directive @key(fields: _FieldSet!) on OBJECT | INTERFACE
+directive @extends on OBJECT
+directive @connection(key: String, filter: [String]) on FIELD
+
+type _Service {
+  sdl: String
+}
+
+type Query {
+  _service: _Service!
+  provider(id: ID!): User
+  providers: [User]
+}
+
+type User @extends @key(fields: "id") {
+  id: ID! @external
+  practice: String!
+}

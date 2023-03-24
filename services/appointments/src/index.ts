@@ -1,37 +1,44 @@
-import { loadSchema } from '@graphql-tools/load';
-import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader';
-import { addResolversToSchema } from '@graphql-tools/schema';
 import { createServer } from 'http'
-import { join } from 'node:path';
 import { createYoga } from 'graphql-yoga'
+import { parse } from 'graphql';
+import { buildSubgraphSchema } from '@apollo/subgraph';
+
+const typeDefs = parse(`
+type Query {
+  appointment(id: ID!): Appointment
+  appointments: [Appointment]
+}
+
+type Appointment @key(fields: "id") {
+    id: ID!
+    appointmentDate: String!
+    patient: User!
+    provider: User!
+}
+
+type User @extends @key(fields: "id") {
+  id: ID!
+  name: String! @external
+  practice: String @external
+}
+`);
 
 
 const testData = require('./appointments.json');
 
 async function main() {
-  // Load schema from the file
-  const schema = await loadSchema(join(__dirname, './schema.graphql'), {
-    loaders: [new GraphQLFileLoader()]
-  });
-
-  // Write some resolvers
-  const resolvers = {
+  const schema = buildSubgraphSchema({ typeDefs, resolvers: {
     Query: {
-      appointments: () => testData,
-      appointment: (_, { id }) => {
+      users: () => testData,
+      user: (_, { id }) => {
         return testData.find(x => x.id === id);
       },
     }
-  };
+  } })
 
-  // Add resolvers to the schema
-  const schemaWithResolvers = addResolversToSchema({ schema, resolvers })
-
-  const server = createServer(createYoga({
-    schema: schemaWithResolvers,
-  }))
-
-  server.listen(2121, () => {
+  createServer(
+    createYoga({ schema })
+  ).listen(2121, () => {
     console.log('Appointments Federation Server ready at http://localhost:2121/graphql');
   });
 }

@@ -28,6 +28,9 @@ all_providers: List[Provider] = [
     ),
 ]
 
+@query.field("_service")
+def resolve_schema(_, __):
+    return { "sdl": type_defs }
 
 @query.field("provider")
 def resolve_provider(_, __, id):

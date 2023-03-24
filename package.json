@@ -1,0 +1,24 @@
+{
+    "name": "gateway",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+      "start": "nodemon gateway.js",
+      "start-service-edges": "nodemon services/edges/index.js",
+      "start-service-nodes": "nodemon services/nodes/index.js",
+      "start-services": "concurrently \"npm:start-service-*\""
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "@apollo/gateway": "0.12.1",
+      "@apollo/federation": "0.12.1",
+      "apollo-server": "^2.11.0",
+      "graphql": "^14.6.0"
+    },
+    "devDependencies": {
+      "concurrently": "^5.1.0",
+      "nodemon": "^2.0.2"
+    }
+  }

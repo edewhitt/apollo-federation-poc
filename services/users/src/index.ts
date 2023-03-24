@@ -1,38 +1,37 @@
-import { loadSchema } from '@graphql-tools/load';
-import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader';
-import { addResolversToSchema } from '@graphql-tools/schema';
 import { createServer } from 'http'
-import { join } from 'node:path';
 import { createYoga } from 'graphql-yoga'
+import { buildSubgraphSchema } from '@apollo/subgraph';
+import { parse } from 'graphql';
 
+const typeDefs = parse(`
+type Query {
+  _service: Service!
+  users: [User]
+  user(id: ID!): User
+}
+
+type User @key(fields: "id") {
+  id: ID!
+  name: String!
+}
+`);
 
 const testData = require('./users.json');
 
 async function main() {
-  // Load schema from the file
-  const schema = await loadSchema(join(__dirname, './schema.graphql'), {
-    loaders: [new GraphQLFileLoader()]
-  });
-
-  // Write some resolvers
-  const resolvers = {
+  const schema2 = buildSubgraphSchema({ typeDefs, resolvers: {
     Query: {
       users: () => testData,
       user: (_, { id }) => {
         return testData.find(x => x.id === id);
       },
     }
-  };
+  } })
 
-  // Add resolvers to the schema
-  const schemaWithResolvers = addResolversToSchema({ schema, resolvers })
-
-  const server = createServer(createYoga({
-    schema: schemaWithResolvers,
-  }))
-
-  server.listen(2122, () => {
-    console.log('User Federation Server ready at http://localhost:2122/graphql');
+  createServer(
+    createYoga({ schema: schema2 })
+  ).listen(2123, () => {
+    console.log('User Federation Server ready at http://localhost:2123/graphql');
   });
 }
 

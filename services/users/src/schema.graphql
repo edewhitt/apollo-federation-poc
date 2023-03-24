@@ -8,12 +8,16 @@ directive @key(fields: _FieldSet!) on OBJECT | INTERFACE
 directive @extends on OBJECT
 directive @connection(key: String, filter: [String]) on FIELD
 
-type _Service {
-  sdl: String
+schema {
+  query: Query
+}
+
+type Service {
+  sdl: String!
 }
 
 type Query {
-  _service: _Service!
+  _service: Service!
   users: [User]
   user(id: ID!): User
 }

@@ -1,0 +1,18 @@
+federation_version: =2.3.2
+subgraphs:
+
+  # Subgraph introspection
+  appointments:
+    routing_url: http://localhost:2121/graphql
+    schema:
+      subgraph_url: http://localhost:2121/graphql
+
+  providers:
+    routing_url: http://localhost:2122/graphql
+    schema:
+      subgraph_url: http://localhost:2122/graphql
+
+  users:
+    routing_url: http://localhost:2123/graphql
+    schema:
+      subgraph_url: http://localhost:2123/graphql

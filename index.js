@@ -1,31 +1,27 @@
-const { ApolloServer } = require("apollo-server");
-const { ApolloGateway } = require("@apollo/gateway");
+const { ApolloGateway } = require('@apollo/gateway');
+const { ApolloServer } = require('apollo-server-express');
+const { readFileSync } = require('fs');
+const { join } = require('node:path');
+const { startStandaloneServer } = require('@apollo/server/standalone');
 
-const gateway = new ApolloGateway({
-  // This entire `serviceList` is optional when running in managed federation
-  // mode, using Apollo Graph Manager as the source of truth.  In production,
-  // using a single source of truth to compose a schema is recommended and
-  // prevents composition failures at runtime using schema validation using
-  // real usage-based metrics.
-  serviceList: [
-    { name: "appointments", url: "http://localhost:2121/graphql" },
-    { name: "providers", url: "http://localhost:2122/graphql"},
-    { name: "users", url: "http://localhost:2123/graphql" },
-  ],
+const supergraphSdl = readFileSync(join(__dirname, 'supergraph.graphql')).toString();
 
-  // Experimental: Enabling this enables the query plan view in Playground.
-  __exposeQueryPlanExperimental: false,
-});
+function buildGateway() {
+  return new ApolloGateway({
+    debug: true,
+    supergraphSdl,
+  });
+}
 
 (async () => {
+  const gateway = buildGateway();
   const server = new ApolloServer({
     gateway,
-
-    // Subscriptions are unsupported but planned for a future Gateway version.
     subscriptions: false,
   });
 
-  server.listen(2120).then(({ url }) => {
-    console.log(`🚀 Server ready at ${url}`);
-  });
+  console.log(server);
+
+  const { url } = startStandaloneServer(server);
+  console.log(`🚀 Server ready at ${url}`);
 })();

@@ -4,7 +4,7 @@ import { parse } from 'graphql';
 import { buildSubgraphSchema } from '@apollo/subgraph';
 
 const typeDefs = parse(`
-type Query {
+extend type Query {
   appointment(id: ID!): Appointment
   appointments: [Appointment]
 }
@@ -17,9 +17,7 @@ type Appointment @key(fields: "id") {
 }
 
 type User @extends @key(fields: "id") {
-  id: ID!
-  name: String! @external
-  practice: String @external
+  id: ID! @external
 }
 `);
 

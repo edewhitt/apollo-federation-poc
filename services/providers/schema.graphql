@@ -18,16 +18,13 @@ scalar _FieldSet
 
 scalar _Any
 
-type Query {
+type Query @extends {
   provider(id: ID!): User
   providers: [User]
-  _entities(representations: [_Any!]!): [_Entity]!
   _service: _Service!
 }
 
 type User @extends @key(fields: "id") {
   id: ID! @external
-  practice: String!
+  practice: String
 }
-
-union _Entity = User

@@ -4,8 +4,7 @@ import { buildSubgraphSchema } from '@apollo/subgraph';
 import { parse } from 'graphql';
 
 const typeDefs = parse(`
-type Query {
-  _service: Service!
+extend type Query {
   users: [User]
   user(id: ID!): User
 }
@@ -19,7 +18,7 @@ type User @key(fields: "id") {
 const testData = require('./users.json');
 
 async function main() {
-  const schema2 = buildSubgraphSchema({ typeDefs, resolvers: {
+  const schema = buildSubgraphSchema({ typeDefs, resolvers: {
     Query: {
       users: () => testData,
       user: (_, { id }) => {
@@ -29,7 +28,7 @@ async function main() {
   } })
 
   createServer(
-    createYoga({ schema: schema2 })
+    createYoga({ schema })
   ).listen(2123, () => {
     console.log('User Federation Server ready at http://localhost:2123/graphql');
   });

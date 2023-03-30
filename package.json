@@ -3,9 +3,11 @@
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
+    "type": "module",
     "scripts": {
-        "start": "nodemon gateway.js",
-        "supergraph": "rover supergraph compose --config ./supergraph.yaml > supergraph.graphql"
+      "compile": "tsc",
+      "start": "npm run compile && node ./dist/index.js",
+      "supergraph": "rover supergraph compose --config ./supergraph.yaml > supergraph.graphql"
     },
     "author": "",
     "license": "ISC",
@@ -15,7 +17,9 @@
         "graphql": "^16.6.0"
     },
     "devDependencies": {
+        "@types/node": "^18.15.7",
         "concurrently": "^5.1.0",
-        "nodemon": "^2.0.2"
+        "nodemon": "^2.0.2",
+        "typescript": "^5.0.2"
     }
 }

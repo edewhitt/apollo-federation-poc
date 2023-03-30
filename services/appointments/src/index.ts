@@ -27,8 +27,8 @@ const testData = require('./appointments.json');
 async function main() {
   const schema = buildSubgraphSchema({ typeDefs, resolvers: {
     Query: {
-      users: () => testData,
-      user: (_, { id }) => {
+      appointments: () => testData,
+      appointment: (_, { id }) => {
         return testData.find(x => x.id === id);
       },
     }

@@ -6,11 +6,11 @@ import { buildSubgraphSchema } from '@apollo/subgraph';
 const typeDefs = parse(`
 extend schema
   @link(url: "https://specs.apollo.dev/federation/v2.0",
-        import: ["@key", "@extends", "@external"])
+        import: ["@key"])
 
 extend type Query {
-  appointment(id: ID!): Appointment
-  appointments: [Appointment]
+  getAppointment(id: ID!): Appointment
+  getAppointments: [Appointment]
 }
 
 type Appointment @key(fields: "id") {
@@ -20,21 +20,27 @@ type Appointment @key(fields: "id") {
     provider: User!
 }
 
-type User @extends @key(fields: "id") {
-  id: ID! @external
+type User @key(fields: "id") {
+  id: ID!
 }
+
+union _Entity = Appointment | User
 `);
 
 
 const testData = require('./appointments.json');
+const fetchAppointmentById = (id) => testData.find(x => x.id === id);
 
 async function main() {
   const schema = buildSubgraphSchema({ typeDefs, resolvers: {
     Query: {
-      appointments: () => testData,
-      appointment: (_, { id }) => {
-        return testData.find(x => x.id === id);
-      },
+      getAppointments: () => testData,
+      getAppointment: (_, { id }) => fetchAppointmentById(id),
+    },
+    Appointments: {
+      __resolveReference(user) {
+        return fetchAppointmentById(user.id);
+      }
     }
   } })
 

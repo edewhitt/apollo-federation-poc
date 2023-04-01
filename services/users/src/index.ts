@@ -4,13 +4,9 @@ import { buildSubgraphSchema } from '@apollo/subgraph';
 import { parse } from 'graphql';
 
 const typeDefs = parse(`
-extend schema
-  @link(url: "https://specs.apollo.dev/federation/v2.0",
-        import: ["@key"])
-
-extend type Query {
-  users: [User]
-  user(id: ID!): User
+type Query {
+  getUsers: [User]
+  getUser(id: ID!): User
 }
 
 type User @key(fields: "id") {
@@ -22,13 +18,18 @@ type User @key(fields: "id") {
 const PORT = 2123;
 const testData = require('./users.json');
 
+const fetchUserById = (id) => testData.find(x => x.id === id);
+
 async function main() {
   const schema = buildSubgraphSchema({ typeDefs, resolvers: {
     Query: {
-      users: () => testData,
-      user: (_, { id }) => {
-        return testData.find(x => x.id === id);
-      },
+      getUsers: () => testData,
+      getUser: (_, { id }) => fetchUserById(id),
+    },
+    User: {
+      __resolveReference(user) {
+        return fetchUserById(user.id);
+      }
     }
   } })
 

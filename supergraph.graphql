@@ -32,7 +32,7 @@ scalar join__FieldSet
 
 enum join__Graph {
   APPOINTMENTS @join__graph(name: "appointments", url: "http://localhost:2121/graphql")
-  PROVIDERS @join__graph(name: "providers", url: "http://localhost:2122/graphql")
+  PROVIDERS @join__graph(name: "providers", url: "http://localhost:2122")
   USERS @join__graph(name: "users", url: "http://localhost:2123/graphql")
 }
 
@@ -55,16 +55,16 @@ type Query
   @join__type(graph: PROVIDERS)
   @join__type(graph: USERS)
 {
-  appointment(id: ID!): Appointment @join__field(graph: APPOINTMENTS)
-  appointments: [Appointment] @join__field(graph: APPOINTMENTS)
+  getAppointment(id: ID!): Appointment @join__field(graph: APPOINTMENTS)
+  getAppointments: [Appointment] @join__field(graph: APPOINTMENTS)
   provider(id: ID!): User @join__field(graph: PROVIDERS)
   providers: [User] @join__field(graph: PROVIDERS)
-  users: [User] @join__field(graph: USERS)
-  user(id: ID!): User @join__field(graph: USERS)
+  getUsers: [User] @join__field(graph: USERS)
+  getUser(id: ID!): User @join__field(graph: USERS)
 }
 
 type User
-  @join__type(graph: APPOINTMENTS, key: "id", extension: true)
+  @join__type(graph: APPOINTMENTS, key: "id")
   @join__type(graph: PROVIDERS, key: "id", extension: true)
   @join__type(graph: USERS, key: "id")
 {

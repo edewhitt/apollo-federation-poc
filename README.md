@@ -6,6 +6,8 @@ This is an example setup for a distributed system using Apollo Federation V2.
 
 Each of the services can be run, introspected, and queried independently. I have included a `start.sh` script to make it easier to start and manage.
 
+NOTE: You will need to install the (Apollo Router)[https://www.apollographql.com/docs/router/quickstart] to run the router and query all services at once.
+
 The script includes the following options:
 - **Start Router**: starts the Apollo Router for running dynamic queries against all services
 - **Build Supergraph**: reaches out to all running services and composes the full supergraph schema

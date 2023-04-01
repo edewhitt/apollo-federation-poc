@@ -14,10 +14,10 @@ function print-error-line {
 function check_option {
   local currentdir=$(pwd)
 
-  appointments_cmd="cd ${currentdir}/services/appointments && npm start"
+  appointments_cmd="cd ${currentdir}/services/appointments && npm install && npm start"
   router_cmd="cd ${currentdir} &&  ./router --dev --supergraph ./supergraph.graphql --hr"
   providers_cmd="cd ${currentdir}/services/providers && python3 -m venv .env && source .env/bin/activate && pip install -r requirements.txt && uvicorn app:app --reload --port 2122"
-  users_cmd="cd ${currentdir}/services/users && npm start"
+  users_cmd="cd ${currentdir}/services/users && npm install && npm start"
 
   for option in "$@"; do
     case $option in

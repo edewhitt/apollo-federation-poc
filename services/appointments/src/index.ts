@@ -4,6 +4,10 @@ import { parse } from 'graphql';
 import { buildSubgraphSchema } from '@apollo/subgraph';
 
 const typeDefs = parse(`
+extend schema
+  @link(url: "https://specs.apollo.dev/federation/v2.0",
+        import: ["@key", "@extends", "@external"])
+
 extend type Query {
   appointment(id: ID!): Appointment
   appointments: [Appointment]

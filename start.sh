@@ -15,8 +15,8 @@ function check_option {
   local currentdir=$(pwd)
 
   appointments_cmd="cd ${currentdir}/services/appointments && npm start"
-  gateway_cmd="cd ${currentdir} && npm start"
-  providers_cmd="cd ${currentdir}/services/providers && python3 -m venv .env && source .env/bin/activate && pip install -r requirements.txt && python3 app.py"
+  gateway_cmd="cd ${currentdir}/gateway && npm start"
+  providers_cmd="cd ${currentdir}/services/providers && python3 -m venv .env && source .env/bin/activate && pip install -r requirements.txt && uvicorn app:app --reload --port 2122"
   users_cmd="cd ${currentdir}/services/users && npm start"
 
   for option in "$@"; do
@@ -24,6 +24,9 @@ function check_option {
     "Start Gateway")
         run_command_in_new_window "$gateway_cmd"
         ;;
+    "Build Supergraph")
+        rover supergraph compose --config ./gateway/supergraph.yaml > ./gateway/supergraph.graphql
+      ;;
     "Start All Services")
         run_command_in_new_window "$appointments_cmd"
         run_command_in_new_window "$providers_cmd"
@@ -57,7 +60,7 @@ if [ -n "${1-}" ]; then
   check_option "$1"
 else
   PS3="Please enter your choice: "
-  options=("Start Gateway" "Start All Services" "Start Appointments" "Start Providers" "Start Users" "Exit")
+  options=("Start Gateway" "Build Supergraph" "Start All Services" "Start Appointments" "Start Providers" "Start Users" "Exit")
   select opt in "${options[@]}"
   do
     check_option "$opt"

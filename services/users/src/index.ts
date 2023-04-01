@@ -4,6 +4,10 @@ import { buildSubgraphSchema } from '@apollo/subgraph';
 import { parse } from 'graphql';
 
 const typeDefs = parse(`
+extend schema
+  @link(url: "https://specs.apollo.dev/federation/v2.0",
+        import: ["@key"])
+
 extend type Query {
   users: [User]
   user(id: ID!): User
@@ -11,10 +15,11 @@ extend type Query {
 
 type User @key(fields: "id") {
   id: ID!
-  name: String!
+  name: String
 }
 `);
 
+const PORT = 2123;
 const testData = require('./users.json');
 
 async function main() {
@@ -29,8 +34,8 @@ async function main() {
 
   createServer(
     createYoga({ schema })
-  ).listen(2123, () => {
-    console.log('User Federation Server ready at http://localhost:2123/graphql');
+  ).listen(PORT, () => {
+    console.log(`User Federation Server ready at http://localhost:${PORT}/graphql`);
   });
 }
 

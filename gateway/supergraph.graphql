@@ -70,5 +70,5 @@ type User
 {
   id: ID!
   practice: String @join__field(graph: PROVIDERS)
-  name: String! @join__field(graph: USERS)
+  name: String @join__field(graph: USERS)
 }

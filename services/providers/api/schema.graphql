@@ -1,0 +1,9 @@
+type Query @extends {
+  provider(id: ID!): User
+  providers: [User]
+}
+
+type User @extends @key(fields: "id") {
+  id: ID! @external
+  practice: String
+}
